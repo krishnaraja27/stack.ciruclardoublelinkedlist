@@ -1,0 +1,143 @@
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.prev = None
+        self.next = None
+
+class DoubleCircleLinkedList:
+    def __init__(self):
+        self.head = None
+
+    def is_empty(self):
+        return self.head is None
+
+    def push(self, value):
+        new_node = Node(value)
+        if self.is_empty():
+            self.head = new_node
+            new_node.prev = new_node
+            new_node.next = new_node
+        else:
+            last_node = self.head.prev
+            new_node.prev = last_node
+            new_node.next = self.head
+            last_node.next = new_node
+            self.head.prev = new_node
+
+    def pop(self):
+        if self.is_empty():
+            return None
+        else:
+            ram = self.head.data
+            last_node = self.head.prev
+            if self.head == last_node:
+                self.head = None
+            else:
+                last_node.next = self.head.next
+                self.head.prev = last_node
+                self.head = self.head.next
+            return ram
+
+    def insert(self, value, index):
+        new_node = Node(value)
+        if self.is_empty():
+            self.head = new_node
+            new_node.prev = new_node
+            new_node.next = new_node
+        elif index == 0:
+            current = self.head
+            while current.next != self.head:
+                current = current.next
+            current.next = new_node
+            new_node.prev = current
+            new_node.next = self.head
+            self.head.prev = new_node
+        else:
+            current = self.head
+            prev = None
+            count = 0
+            while count < index and current.next != self.head:
+                prev = current
+                current = current.next
+                count += 1
+            prev.next = new_node
+            new_node.prev = prev
+            new_node.next = current
+            current.prev = new_node
+
+    def delete(self, index):
+        if self.is_empty():
+            return
+
+        if index == 0:
+            if self.head.next == self.head:  # Only one element in the list
+                self.head = None
+            else:
+                last_node = self.head.prev
+                last_node.next = self.head.next
+                self.head.next.prev = last_node
+                self.head = self.head.next
+        else:
+            current = self.head
+            prev = None
+            count = 0
+            while count < index and current.next != self.head:
+                prev = current
+                current = current.next
+                count += 1
+            if count == index:
+                prev.next = current.next
+                current.next.prev = prev
+
+    def delete_at_the_value(self, value):
+        if self.is_empty():
+            return
+
+        if self.head.data == value:
+            if self.head.next == self.head:  # Only one element in the list
+                self.head = None
+            else:
+                last_node = self.head.prev
+                last_node.next = self.head.next
+                self.head.next.prev = last_node
+                self.head = self.head.next
+        else:
+            current = self.head
+            prev = None
+            while current.data != value and current.next != self.head:
+                prev = current
+                current = current.next
+            if current.data == value:
+                prev.next = current.next
+                current.next.prev = prev
+
+    def peek(self):
+        if self.is_empty():
+            return None
+        else:
+            return self.head.data
+
+ram = DoubleCircleLinkedList()
+ram.push(1)
+ram.push(2)
+ram.push(3)
+ram.push(5)
+ram.push(6)
+ram.insert(12,0)
+ram.delete(1)
+ram.delete_at_the_value(2)
+print(ram.pop())
+print(ram.peek())
+
+
+
+
+
+
+
+
+
+
+
+
+
